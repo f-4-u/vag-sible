@@ -1,0 +1,69 @@
+---
+- name: Configure SSH on Arch Linux VM
+  hosts: all
+  become: true
+  tasks:
+    - name: Disable root login via SSH
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+
+    - name: Disable password authentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#PasswordAuthentication"
+        line: "PasswordAuthentication no"
+
+    - name: Disable SSH empty password logins
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PermitEmptyPasswords"
+        line: "PermitEmptyPasswords no"
+
+    - name: Disable SSH root login via password
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?PermitRootLogin"
+        line: "PermitRootLogin without-password"
+
+    - name: Set SSH login grace time
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?LoginGraceTime"
+        line: "LoginGraceTime 1m"
+
+    - name: Set SSH protocol version to 2
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?Protocol"
+        line: "Protocol 2"
+
+    - name: Set SSH key exchange algorithms
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?KexAlgorithms"
+        line: "KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256"
+
+    - name: Set SSH ciphers
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?Ciphers"
+        line: "Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+
+    - name: Set SSH MACs
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?MACs"
+        line: "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com"
+
+    - name: Change SSH port
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#?Port "
+        line: "Port 2222"
+
+    - name: Restart SSH service
+      service:
+        name: sshd
+        state: restarted

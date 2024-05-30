@@ -1,0 +1,32 @@
+---
+- name: Install firewalld
+  pacman:
+    name: firewalld
+    state: present
+
+- name: Start and enable firewalld
+  systemd:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Wait for firewalld to start
+  wait_for:
+    timeout: 10
+    port: 22
+    delay: 1
+  ignore_errors: yes
+
+- name: Open the new SSH port in the firewall
+  firewalld:
+    port: 2222/tcp
+    permanent: true
+    state: enabled
+
+- name: Reload firewalld to apply changes
+  command: firewall-cmd --reload
+  register: firewalld_reload
+  until: firewalld_reload.rc == 0
+  retries: 3
+  delay: 5
+  when: firewalld_reload is defined and firewalld_reload.rc != 0

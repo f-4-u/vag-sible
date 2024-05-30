@@ -1,0 +1,11 @@
+---
+- name: Install auditd
+  pacman:
+    name: audit
+    state: present
+
+- name: Ensure auditd service is running and enabled
+  systemd:
+    name: auditd
+    enabled: yes
+    state: started

@@ -1,0 +1,21 @@
+---
+- name: Install Fail2Ban
+  pacman:
+    name: fail2ban
+    state: present
+
+- name: Ensure Fail2Ban service is running and enabled
+  systemd:
+    name: fail2ban
+    enabled: yes
+    state: started
+
+- name: Configure Fail2Ban for SSH
+  copy:
+    dest: /etc/fail2ban/jail.local
+    content: |
+      [sshd]
+      enabled = true
+      port    = 2222
+      logpath = %(sshd_log)s
+      maxretry = 5

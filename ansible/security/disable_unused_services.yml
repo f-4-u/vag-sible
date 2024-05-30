@@ -1,0 +1,14 @@
+---
+- name: Disable avahi-daemon
+  systemd:
+    name: avahi-daemon
+    enabled: no
+    state: stopped
+  ignore_errors: yes
+
+- name: Disable cups
+  systemd:
+    name: cups
+    enabled: no
+    state: stopped
+  ignore_errors: yes

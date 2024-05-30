@@ -1,0 +1,36 @@
+---
+- name: Create example user and configure sudo
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure the wheel group is present
+      group:
+        name: wheel
+        state: present
+
+    - name: Create example user
+      user:
+        name: example
+        comment: "example User"
+        shell: /usr/bin/zsh
+        groups: wheel
+        append: yes
+        state: present
+
+    - name: Set password for user
+      user:
+        name: example
+        password: "{{ 'ansible101' | password_hash('sha512') }}"
+
+    - name: Set up authorized keys for example
+      authorized_key:
+        user: example
+        state: present
+        key: "{{ lookup('file', playbook_dir + '/assets/users/ssh/example.pub') }}"
+
+    - name: Ensure sudoers file is configured for wheel group
+      copy:
+        dest: /etc/sudoers.d/wheel
+        content: |
+          %wheel ALL=(ALL) ALL
+        mode: '0440'

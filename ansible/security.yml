@@ -1,0 +1,28 @@
+---
+- name: Apply security configurations
+  hosts: all
+  become: true
+  tasks:
+    # Include the strong password policies
+    - name: Set strong password policies
+      include_tasks: security/set_password_policies.yml
+
+    # Include the firewall configuration
+    - name: Install and configure UFW firewall
+      include_tasks: security/configure_firewall.yml
+
+    # Include disabling unused services
+    - name: Disable unused services
+      include_tasks: security/disable_unused_services.yml
+
+    # Include Fail2Ban setup
+    - name: Install and configure Fail2Ban
+      include_tasks: security/configure_fail2ban.yml
+
+    # Include log auditing setup
+    - name: Set up log auditing with auditd
+      include_tasks: security/setup_auditd.yml
+
+    # Include package updates
+    - name: Ensure all packages are up-to-date
+      include_tasks: security/update_packages.yml

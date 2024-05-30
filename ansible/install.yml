@@ -1,0 +1,26 @@
+---
+- name: Install packages on Arch Linux VM
+  hosts: all
+  become: true
+  tasks:
+    - name: Install required packages for VirtualBox Guest Additions
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - gcc
+        - make
+        - perl
+        - dkms   # For dynamic kernel module support
+
+    - name: Install packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - sudo
+        - firewalld
+        - openssh
+        - zsh
+        - virtualbox-guest-utils-nox
+        - lynis

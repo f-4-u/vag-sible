@@ -1,0 +1,8 @@
+---
+- name: Initial setup
+  hosts: all
+  become: true
+  tasks:
+    - name: Set machine and hostname
+      hostname:
+        name: EXAMPLE

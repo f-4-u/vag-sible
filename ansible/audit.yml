@@ -1,0 +1,18 @@
+---
+- name: Audit with lynis
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Lynis
+      package:
+        name: lynis
+        state: present
+
+    - name: Execute Lynis audit
+      shell: lynis audit system
+      register: lynis_output
+      changed_when: false
+
+    - name: Show Lynis audit output
+      debug:
+        msg: "{{ lynis_output.stdout_lines }}"
