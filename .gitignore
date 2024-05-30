@@ -1,0 +1,8 @@
+# Ignore Vagrant configuration files to prevent exposing private keys
+.vagrant
+
+# Ignore all files under the 'ssh' folder
+ansible/assets/users/ssh/*
+
+# However, allow files with a .pub extension under the 'ansible/assets/users/ssh' folder
+!ansible/assets/users/ssh/*.pub
